@@ -3,21 +3,47 @@ from thread import *
 import threading 
 import json
 import logging
-  
+import mysql.connector
+from mysql.connector import Error
+from mysql.connector import errorcode
 
-def threaded(c): 
+  
+# thread fuction 
+def threaded(c,addr): 
     while True:
-    	arr = []
     	try:
     		data = c.recv(1024) 
     		print(data)
     		if not data:
     			print('Bye')
     			break
-
     	except Exception as e:
     		print(e)
-    c.close() 
+	print(addr[0])
+    c.close()
+    try:
+		connection = mysql.connector.connect(host='localhost:3307',
+                                         database='test',
+                                         user='sshuser',
+                                         password='Password@1')
+		
+		mySql_insert_query = """INSERT INTO logins (IP, logins) 
+                           VALUES 
+                           (%s ,%s ) ON DUPLICATE KEY UPDATE logins = logins + 1; """
+		recordTuple = (addr[0],'1')
+		cursor = connection.cursor()
+		cursor.execute(mySql_insert_query,recordTuple)
+		connection.commit()
+		print(cursor.rowcount, "Record inserted successfully")
+		cursor.close()
+
+    except mysql.connector.Error as error:
+		print("Failed to insert record {}".format(error))
+    finally:
+		if (connection.is_connected()):
+			connection.close()
+		print("MySQL connection is closed")
+
 
 def Main(): 
     host = "" 
@@ -40,7 +66,7 @@ def Main():
         c, addr = s.accept() 
         print('Connected to :', addr[0], ':', addr[1]) 
   
-        start_new_thread(threaded, (c,)) 
+        start_new_thread(threaded, (c,addr)) 
     s.close() 
   
   
