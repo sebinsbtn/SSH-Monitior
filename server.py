@@ -19,18 +19,19 @@ def threaded(c,addr):
     			break
     	except Exception as e:
     		print(e)
-	print(addr[0])
+	# print(addr[0])
     c.close()
+    
+def insertintotable(addr):
     try:
-		connection = mysql.connector.connect(host='localhost:3307',
-                                         database='test',
+		connection = mysql.connector.connect(host='127.0.0.1',
+                                         port='3307',
+                                         database='logindetails',
                                          user='sshuser',
                                          password='Password@1')
 		
-		mySql_insert_query = """INSERT INTO logins (IP, logins) 
-                           VALUES 
-                           (%s ,%s ) ON DUPLICATE KEY UPDATE logins = logins + 1; """
-		recordTuple = (addr[0],'1')
+		mySql_insert_query = """INSERT INTO ssh_logins (IP, Attempts) VALUES (%s ,%s ) ON DUPLICATE KEY UPDATE Attempts = Attempts + 1; """
+		recordTuple = (addr,'1')
 		cursor = connection.cursor()
 		cursor.execute(mySql_insert_query,recordTuple)
 		connection.commit()
@@ -65,8 +66,9 @@ def Main():
   
         c, addr = s.accept() 
         print('Connected to :', addr[0], ':', addr[1]) 
-  
-        start_new_thread(threaded, (c,addr)) 
+        insertintotable(addr[0])
+        c.close()
+        # start_new_thread(threaded, (c,addr)) 
     s.close() 
   
   
