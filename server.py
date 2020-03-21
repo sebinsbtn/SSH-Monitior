@@ -25,7 +25,7 @@ def Main():
     port = 1492
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM) 
     s.bind((host, port)) 
-    logging.basicConfig(filename='/home/ubuntu/access.log',
+    logging.basicConfig(filename='./access.log',
                             filemode='a',
                             format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s',
                             datefmt='%H:%M:%S',
