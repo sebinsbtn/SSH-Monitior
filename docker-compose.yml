@@ -1,0 +1,41 @@
+version: "3.4"
+
+services:
+  DB:
+      image: mysql:5.7
+      ports:
+          - "3307:3306"
+      volumes:
+          - ./db:/var/lib/mysql
+      restart: always
+      environment:
+            MYSQL_ROOT_PASSWORD: 'Password@1'
+            MYSQL_DATABASE: 'logindetails'
+            MYSQL_USER: 'sshuser'
+            MYSQL_PASSWORD: 'Password@1'
+
+  phpmyadmin:
+     image: phpmyadmin/phpmyadmin
+     environment:
+            PMA_ARBITRARY: 1
+            MYSQL_USER: sshuser
+            MYSQL_PASSWORD: Password@1
+            MYSQL_ROOT_PASSWORD: Password@1
+     ports:
+            - 82:80
+     restart: always
+     links:
+            - DB
+  web:
+    build: .
+    volumes:
+      - "./app:/src/app"
+    ports:
+    - "81:1492"
+    command: /entrypoint.sh
+    tty: true
+    stdin_open: true
+    working_dir: '/src/app'
+    restart: always
+    links:
+            - DB
