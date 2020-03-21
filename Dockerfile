@@ -3,10 +3,8 @@ MAINTAINER sebin.sbtn@gmail.com
 
 RUN apt-get update
 
-ADD index.php /var/www/html/
+RUN docker-php-ext-install mysqli
 
 WORKDIR /var/www/html/
-
-ENTRYPOINT ["/bin/bash"]
 
 EXPOSE 80

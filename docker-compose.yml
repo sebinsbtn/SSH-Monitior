@@ -29,13 +29,11 @@ services:
   web:
     build: .
     volumes:
-      - "./app:/src/app"
+      - "./web:/var/www/html"
     ports:
-    - "81:1492"
-    command: /entrypoint.sh
+    - "81:80"
     tty: true
     stdin_open: true
-    working_dir: '/src/app'
     restart: always
     links:
             - DB
