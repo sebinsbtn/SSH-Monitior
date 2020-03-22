@@ -83,7 +83,7 @@ Open the client.sh file and REPLACE the IP address field by the IP of the previo
 
 run the scripts
 ```bash
-sudo ./clent.sh
+sudo ./client.sh
 ```
 From next ssh login onwards, the results will be available on server web portal
 
