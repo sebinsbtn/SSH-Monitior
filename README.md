@@ -13,14 +13,14 @@ Source codes can be found on Server and Client directories respectively.
 Bash , Python , Mysql , Docker , docker-compose , aws cli , PHP and HTML
 
 
-##Installation - Server
+## Installation - Server
 
-###Prerequisites
+### Prerequisites
 
 A server machine with docker-compose installed
 ports 81,82 and 1492 available publicly
 
-###Steps
+### Steps
 
 Copy the contents of Server directory to the destination sever
 
