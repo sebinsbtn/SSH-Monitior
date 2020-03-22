@@ -7,7 +7,6 @@ else
 fi
 echo $profile
 rm createec2.log instanceid instanceid.first instanceid.second  ipaddress ipaddress.first  ipaddress.second  ipaddress.third image-id.out subnet-id.out securitygrp.out
-echo "Creating instance"
 
 echo "Input AMI ID"
 read imageid
@@ -16,16 +15,15 @@ then
 	echo "AMI ID not provided"
 	exit 0
 fi
-
 echo $imageid
-
-aws ec2 create-key-pair --key-name new-key-for-monitoringapp --query 'KeyMaterial' --output text > new-key-for-monitoringapp.pem --profile $profile
-chmod 400 new-key-for-monitoringapp.pem
+echo "Creating instance"
+aws ec2 create-key-pair --key-name new-key-for-monitoringapp-client --query 'KeyMaterial' --output text > new-key-for-monitoringapp-client.pem --profile $profile
+chmod 400 new-key-for-monitoringapp-client.pem
 
 aws ec2 describe-subnets --max-items 1 --profile $profile |grep subnet- |cut -f2- -d: |tail -n +2 | sed 's/\"//' | sed 's/\,//' |sed 's/\"//' |sed 's/\ //' >> subnet-id.out
 subnetid=`cat subnet-id.out`
 
-aws ec2 run-instances --image-id $imageid --key-name new-key-for-monitoringapp --instance-type t2.micro --placement AvailabilityZone=us-east-1b  --count 1 --associate-public-ip-address --subnet-id $subnetid--profile $profile --region us-east-1 >> createec2.log
+aws ec2 run-instances --image-id $imageid --key-name new-key-for-monitoringapp-client --instance-type t2.micro --placement AvailabilityZone=us-east-1b  --count 1 --associate-public-ip-address --subnet-id $subnetid--profile $profile --region us-east-1 >> createec2.log
 echo "Instance Created"
 
 sleep 3m
@@ -69,19 +67,15 @@ echo "Got IP Address"
 sleep 3s
 
 
-rsync -avz -e "ssh -o StrictHostKeyChecking=no -i "new-key-for-monitoringapp.pem" -v" --delete --rsync-path="sudo rsync" Server/ ubuntu@$input2:/home/ubuntu/Server$
+rsync -avz -e "ssh -o StrictHostKeyChecking=no -i "new-key-for-monitoringapp-client.pem" -v" --delete --rsync-path="sudo rsync" client.sh ubuntu@$input2:/home/ubuntu/Server$
 
 echo "Copied Files"
 sleep 3s
 
-ssh -o StrictHostKeyChecking=no -i "new-key-for-monitoringapp.pem" ubuntu@$input2 <<EOF
+ssh -o StrictHostKeyChecking=no -i "new-key-for-monitoringapp-client.pem" ubuntu@$input2 <<EOF
 sudo apt update -y
-sudo apt install docker-compose -y
-cd Server$ && sudo docker-compose build
-sudo docker-compose up -d
+cd Server$ && sudo ./client.sh
 exit
 EOF
 
-echo "web portal url = http://"$input2":81"
-echo "phpmyadmin url = http://"$input2":82"
 echo "IP addess of server = "$input2
