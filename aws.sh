@@ -1,4 +1,5 @@
 #!/bin/bash
+##Author Sebin Sebastian sebin.sbtn@gmail.com
 if [ -z "$1" ]
 then
 	profile='default'
@@ -6,8 +7,6 @@ else
 	profile=$1
 fi
 echo $profile
-rm createec2.log instanceid instanceid.first instanceid.second  ipaddress ipaddress.first  ipaddress.second  ipaddress.third image-id.out subnet-id.out securitygrp.out
-echo "Creating instance"
 
 echo "Input AMI ID"
 read imageid
@@ -18,7 +17,7 @@ then
 fi
 
 echo $imageid
-
+echo "Creating instance"
 aws ec2 create-key-pair --key-name new-key-for-monitoringapp --query 'KeyMaterial' --output text > new-key-for-monitoringapp.pem --profile $profile
 chmod 400 new-key-for-monitoringapp.pem
 

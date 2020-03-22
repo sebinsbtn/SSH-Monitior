@@ -1,4 +1,5 @@
 #!/bin/bash 
+##Author Sebin Sebastian sebin.sbtn@gmail.com
 #check if already set up the script
 if [ -d "/etc/pam.scripts" ]; then
   exit 0

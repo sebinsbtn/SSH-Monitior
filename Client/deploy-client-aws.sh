@@ -1,4 +1,5 @@
 #!/bin/bash
+##Author Sebin Sebastian sebin.sbtn@gmail.com
 if [ -z "$1" ]
 then
 	profile='default'
@@ -6,7 +7,6 @@ else
 	profile=$1
 fi
 echo $profile
-rm createec2.log instanceid instanceid.first instanceid.second  ipaddress ipaddress.first  ipaddress.second  ipaddress.third image-id.out subnet-id.out securitygrp.out
 
 echo "Input AMI ID"
 read imageid
