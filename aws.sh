@@ -1,5 +1,6 @@
 #!/bin/bash
 ##Author Sebin Sebastian sebin.sbtn@gmail.com
+##this is a test comment
 if [ -z "$1" ]
 then
 	profile='default'
